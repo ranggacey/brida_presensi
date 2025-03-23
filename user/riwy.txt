@@ -1,0 +1,371 @@
+<?php
+session_start();
+require_once "../includes/session.php";
+require_once "../includes/config.php";
+checkLogin();
+
+$user_id = $_SESSION['user_id'];
+
+// Filter parameters dari GET (jika ada)
+$date_from     = isset($_GET['date_from']) ? $_GET['date_from'] : '';
+$date_to       = isset($_GET['date_to']) ? $_GET['date_to'] : '';
+$status_filter = isset($_GET['status']) ? $_GET['status'] : '';
+$search        = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Pagination
+$limit  = 10; // jumlah record per halaman
+$page   = isset($_GET['page']) ? intval($_GET['page']) : 1;
+if ($page < 1) {
+    $page = 1;
+}
+$offset = ($page - 1) * $limit;
+
+// Bangun kondisi WHERE berdasarkan filter
+$where = "WHERE user_id = ?";
+$params = [$user_id];
+$types  = "i";
+
+if ($date_from !== '' && $date_to !== '') {
+    $where .= " AND date BETWEEN ? AND ?";
+    $params[] = $date_from;
+    $params[] = $date_to;
+    $types   .= "ss";
+} elseif ($date_from !== '') {
+    $where .= " AND date >= ?";
+    $params[] = $date_from;
+    $types   .= "s";
+} elseif ($date_to !== '') {
+    $where .= " AND date <= ?";
+    $params[] = $date_to;
+    $types   .= "s";
+}
+
+if ($status_filter !== '') {
+    $where .= " AND status = ?";
+    $params[] = $status_filter;
+    $types   .= "s";
+}
+
+if ($search !== '') {
+    $where .= " AND (keterangan LIKE ? OR date LIKE ?)";
+    $params[] = "%$search%";
+    $params[] = "%$search%";
+    $types   .= "ss";
+}
+
+// Hitung total record (untuk pagination)
+$countQuery = "SELECT COUNT(*) as total FROM attendance $where";
+$stmt_count = $conn->prepare($countQuery);
+if ($stmt_count) {
+    if (!empty($params)) {
+        $stmt_count->bind_param($types, ...$params);
+    }
+    $stmt_count->execute();
+    $result_count = $stmt_count->get_result();
+    $total = $result_count->fetch_assoc()['total'];
+    $stmt_count->close();
+} else {
+    $total = 0;
+}
+
+// Query utama dengan pagination
+$query = "SELECT date, waktu_absen, waktu_pulang, status, keterangan, keterangan_pulang, foto, foto_pulang 
+          FROM attendance $where 
+          ORDER BY date ASC, waktu_absen ASC 
+          LIMIT ? OFFSET ?";
+$params[] = $limit;
+$params[] = $offset;
+$types .= "ii";
+
+$stmt = $conn->prepare($query);
+if ($stmt) {
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    die("Query error: " . $conn->error);
+}
+
+// Ambil data untuk grafik status distribusi
+$chartQuery = "SELECT status, COUNT(*) as count FROM attendance WHERE user_id = ? GROUP BY status";
+$stmt_chart = $conn->prepare($chartQuery);
+$stmt_chart->bind_param("i", $user_id);
+$stmt_chart->execute();
+$result_chart = $stmt_chart->get_result();
+$status_data = [];
+while ($row = $result_chart->fetch_assoc()) {
+    $status_data[$row['status']] = $row['count'];
+}
+$stmt_chart->close();
+
+// Ambil data untuk grafik tren harian
+$dailyQuery = "SELECT date, COUNT(*) as count FROM attendance WHERE user_id = ? GROUP BY date ORDER BY date ASC";
+$stmt_daily = $conn->prepare($dailyQuery);
+$stmt_daily->bind_param("i", $user_id);
+$stmt_daily->execute();
+$result_daily = $stmt_daily->get_result();
+$dates = [];
+$daily_counts = [];
+while ($row = $result_daily->fetch_assoc()) {
+    $dates[] = $row['date'];
+    $daily_counts[] = $row['count'];
+}
+$stmt_daily->close();
+
+$total_pages = ceil($total / $limit);
+
+// Ambil data user (untuk sidebar)
+$userQuery = "SELECT nama, universitas FROM users WHERE id = ?";
+$stmt_user = $conn->prepare($userQuery);
+$stmt_user->bind_param("i", $user_id);
+$stmt_user->execute();
+$result_user = $stmt_user->get_result();
+if ($result_user->num_rows > 0) {
+    $user_data = $result_user->fetch_assoc();
+    $user_name = $user_data['nama'];
+    $universitas = $user_data['universitas'];
+} else {
+    die("User tidak ditemukan");
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Premium</title>
+
+    <!-- Premium Assets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="riwayat.css">
+
+
+</head>
+
+<body>
+    <!-- Hamburger Menu -->
+    <button class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img
+                src="../uploads/users/user_<?= $user_id ?>.jpg?<?= time() ?>"
+                alt="Profile"
+                class="profile-img"
+                id="sidebarProfileImg">
+            <div>
+                <h3 style="color: white; margin-bottom: 4px;"><?= htmlspecialchars($user_name) ?></h3>
+                <p style="color: #94a3b8; font-size: 0.9rem;"><?= htmlspecialchars($universitas) ?></p>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="nav-item">
+                <a href="absensi.php" class="nav-link">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Presensi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="update_identitas.php" class="nav-link">
+                    <i class="fas fa-id-card"></i>
+                    <span>Update Profil</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="riwayat.php" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../auth/logout.php" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Data Table -->
+    <div class="card p-3 mb-4">
+        <table class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Tanggal Presensi</th>
+                    <th>Waktu Presensi</th>
+                    <th>Waktu Pulang</th>
+                    <th>Status</th>
+                    <th>Keterangan Masuk</th>
+                    <th>Keterangan Pulang</th>
+                    <th>Foto Masuk</th>
+                    <th>Foto Pulang</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php $no = $offset + 1; ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $no ?></td>
+                            <td><?= htmlspecialchars($row["date"]) ?></td>
+                            <td><?= htmlspecialchars($row["waktu_absen"]) ?></td>
+                            <td><?= !empty($row["waktu_pulang"]) ? htmlspecialchars($row["waktu_pulang"]) : '-' ?></td>
+                            <td><?= htmlspecialchars($row["status"]) ?></td>
+                            <td><?= htmlspecialchars($row["keterangan"]) ?></td>
+                            <td><?= !empty($row["keterangan_pulang"]) ? htmlspecialchars($row["keterangan_pulang"]) : '-' ?></td>
+                            <td>
+                                <?php if (!empty($row["foto"]) && file_exists("../uploads/users/" . $row["foto"])): ?>
+                                    <img src="../uploads/users/<?= htmlspecialchars($row["foto"]) ?>" alt="Foto Masuk" style="width:60px; height:60px; object-fit:cover;">
+                                <?php else: ?>
+                                    Tidak ada foto
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if (!empty($row["foto_pulang"]) && file_exists("../uploads/users/" . $row["foto_pulang"])): ?>
+                                    <img src="../uploads/users/<?= htmlspecialchars($row["foto_pulang"]) ?>" alt="Foto Pulang" style="width:60px; height:60px; object-fit:cover;">
+                                <?php else: ?>
+                                    Tidak ada foto
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php $no++;
+                    endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="9" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Previous</a>
+                </li>
+            <?php endif; ?>
+            <?php for ($p = 1; $p <= $total_pages; $p++): ?>
+                <li class="page-item <?= ($p == $page) ? 'active' : '' ?>">
+                    <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => $p])) ?>"><?= $p ?></a>
+                </li>
+            <?php endfor; ?>
+            <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Next</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+
+    <!-- Chart: Status Distribution -->
+    <div class="card p-4 mb-4">
+        <h4 class="text-center mb-3">Diagram Presensi</h4>
+        <div class="chart-container" style="position: relative; height:300px;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+    </div>
+    </main>
+
+    <!-- Overlay Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const hamburger = document.getElementById('hamburger');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        }
+
+        hamburger.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768) {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                    overlay.style.display = 'none';
+                }
+            }
+        });
+
+        // Preserve scroll position on page refresh
+        window.onbeforeunload = function() {
+            localStorage.setItem('sidebarState', sidebar.classList.contains('active'));
+        }
+
+        window.onload = function() {
+            const sidebarState = localStorage.getItem('sidebarState');
+            if (sidebarState === 'true' && window.innerWidth >= 768) {
+                sidebar.classList.add('active');
+            }
+        }
+
+        document.querySelector('form').addEventListener('submit', function() {
+            // Update gambar sidebar setelah 1 detik (waktu untuk upload selesai)
+            setTimeout(() => {
+                const sidebarImg = document.getElementById('sidebarProfileImg');
+                const newSrc = `../uploads/users/user_<?= $user_id ?>.jpg?${Date.now()}`;
+                sidebarImg.src = newSrc;
+            }, 1000);
+        });
+        // Chart.js: Status Distribution Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: <?= json_encode(array_keys($status_data)) ?>,
+                datasets: [{
+                    data: <?= json_encode(array_values($status_data)) ?>,
+                    backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#2196F3'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

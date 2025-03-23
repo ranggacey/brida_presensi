@@ -1,0 +1,92 @@
+// user.js
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Navbar: Tambahkan interaksi active link
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Smooth scroll untuk anchor (jika ada)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+                target.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    });
+    
+    // Intersection Observer untuk efek fade-in
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("appear");
+            observer.unobserve(entry.target);
+        });
+    }, appearOptions);
+    faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
+    
+    // Absensi Multi-Step Form Logic (jika ada)
+    const nextBtn = document.getElementById("nextBtn");
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function() {
+            // Pindahkan dari step 1 ke step 2
+            document.getElementById("step1").style.display = "none";
+            document.getElementById("step2").style.display = "block";
+            startCameraAndCapture();
+        });
+    }
+    
+    function startCameraAndCapture() {
+        const video = document.getElementById("video");
+        const submitBtn = document.getElementById("submitBtn");
+        navigator.mediaDevices.getUserMedia({ video: {} })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+                // Tunggu 1 detik, lalu auto capture foto
+                setTimeout(() => {
+                    capturePhoto();
+                    // Hentikan stream kamera
+                    stream.getTracks().forEach(track => track.stop());
+                    // Aktifkan tombol submit
+                    submitBtn.disabled = false;
+                }, 1000);
+            })
+            .catch(err => {
+                console.error("Gagal mengakses kamera:", err);
+                alert("Gagal mengakses kamera. Pastikan izin telah diberikan.");
+            });
+    }
+    
+    function capturePhoto() {
+        const video = document.getElementById("video");
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/jpeg");
+        document.getElementById("captured_photo").value = dataURL;
+    }
+    
+    // Submit form absensi jika tombol submit ada
+    const submitBtn = document.getElementById("submitBtn");
+    if (submitBtn) {
+        submitBtn.addEventListener("click", function() {
+            document.getElementById("absensiForm").submit();
+        });
+    }
+});

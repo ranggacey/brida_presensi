@@ -1,0 +1,196 @@
+/* user.css */
+
+/* Global Reset & Body */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: linear-gradient(45deg,rgb(196, 218, 214),rgb(200, 223, 239));
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background: #343a40;
+  }
+  .navbar-brand, .navbar-nav .nav-link {
+    color: #fff !important;
+    transition: color 0.3s ease;
+  }
+  .navbar-nav .nav-link:hover,
+  .navbar-nav .nav-link.active {
+    color: #e14946 !important;
+  }
+  
+  /* Container Umum */
+  .container {
+    margin-top: 2rem;
+    padding: 0 1rem;
+  }
+  
+  /* Card Styling (Dashboard & Lainnya) */
+  .card {
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  .card-header {
+    background: #6a82fb;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  /* Tabel Riwayat */
+  .table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .table th, .table td {
+    vertical-align: middle;
+  }
+  
+  /* Multi-Step Form untuk Absensi */
+  #absensiForm {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-bottom: 2rem;
+  }
+  #absensiForm .form-label {
+    font-weight: 600;
+  }
+  #absensiForm .form-control {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  #absensiForm .form-control:focus {
+    border-color: #6a82fb;
+    box-shadow: 0 0 0 0.2rem rgba(106,130,251,0.25);
+  }
+  
+  /* Video Container pada Absensi */
+  #video {
+    border: 2px solid #6a82fb;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+  
+  /* Tombol */
+  .btn-primary {
+    background: #fc5c7d;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: #e14b66;
+    transform: scale(1.05);
+  }
+  .btn-secondary {
+    background: #1d2b64;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .btn-secondary:hover {
+    background: #151b54;
+    transform: scale(1.05);
+  }
+  
+  /* Animasi Fade In */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in.appear {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Responsive untuk Mobile */
+  @media (max-width: 768px) {
+    .container {
+      margin-top: 1rem;
+    }
+    .card, #absensiForm {
+      margin: 1rem auto;
+    }
+  }
+  
+  /* Animasi Fade In */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .fade-in.appear {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Responsive untuk Mobile */
+  @media (max-width: 768px) {
+    .container {
+      margin-top: 1rem;
+    }
+    .card, #absensiForm {
+      margin: 1rem auto;
+    }
+  } 
+  
+  /* Tombol Presensi Masuk */
+.btn-presensi-masuk {
+  background: #edbbc5; /* Warna merah muda */
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-presensi-masuk:hover {
+  background: #ed7a8f; /* Warna merah muda lebih gelap saat hover */
+  transform: scale(1.05);
+}
+
+/* Tombol Presensi Pulang */
+.btn-presensi-pulang {
+  background: #b5c1f0; /* Warna biru tua */
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-presensi-pulang:hover {
+  background: #818cec; /* Warna biru lebih gelap saat hover */
+  transform: scale(1.05);
+}
+

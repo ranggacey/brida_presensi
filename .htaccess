@@ -1,0 +1,49 @@
+# Disable directory listing
+Options -Indexes
+
+# Protect .htaccess file
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect sensitive files
+<FilesMatch "(\.(ini|log|sh|inc|bak|pl|py|cgi|html|htm|exe|sh|bat|cmd|com)$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(config\.php|database\.php|\.env|\.xml)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    
+    RewriteCond %{REQUEST_URI} !^/favicon.ico$
+    
+    RewriteRule ^vendor/.*$ - [F]
+
+    # Tambahan - Block access to sensitive directories or files
+    RewriteRule ^config\.php$ - [F]
+    RewriteRule ^\.env$ - [F]
+    RewriteRule ^(\.htaccess|\.git|\.gitignore|\.svn|\.htpasswd)$ - [F]
+
+    RewriteCond $1 !^(index\.php|images|stylesheets|system/application/sources/)
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^(.*)$ index.php?/
+    
+    RedirectMatch 404 /\.git
+
+</IfModule>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

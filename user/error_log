@@ -1,0 +1,69 @@
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "ttl" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 23
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 23
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "alamat" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 24
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 24
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "universitas" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 25
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 25
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "fakultas" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 26
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 26
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "prodi" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 27
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 27
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "tgl_masuk_magang" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 28
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 28
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Warning:  Undefined array key "no_hp" in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 29
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 29
+[10-Mar-2025 13:01:12 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect date value: '' for column `bridasemarangkot_presensi`.`users`.`tgl_masuk_magang` at row 1 in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php:98
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(98): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php on line 98
+[11-Mar-2025 10:30:34 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/absensi.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:40 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:44 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:45 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:47 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:50 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/update_identitas.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[11-Mar-2025 10:30:52 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php:10
+Stack trace:
+#0 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php(10): mysqli->__construct('localhost', 'bridasemarangko...', Object(SensitiveParameterValue), 'bridasemarangko...')
+#1 /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/absensi.php(3): require_once('/home/bridasema...')
+#2 {main}
+  thrown in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/includes/config.php on line 10
+[12-Mar-2025 07:41:38 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 321
+[12-Mar-2025 07:41:38 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 361
+[12-Mar-2025 07:41:51 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 321
+[12-Mar-2025 07:41:51 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 361
+[12-Mar-2025 07:42:59 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 321
+[12-Mar-2025 07:42:59 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 361
+[12-Mar-2025 07:43:18 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 321
+[12-Mar-2025 07:43:18 Asia/Jakarta] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/bridasemarangkot/public_html/presensi.brida.semarangkota.go.id/user/dashboard.php on line 361
